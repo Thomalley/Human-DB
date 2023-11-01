@@ -3,7 +3,6 @@ const createNewUser = async (app, {
   name,
   lastname,
   password,
-  role,
   userTokenVerification,
 }) => {
   const { db } = app.locals;
@@ -13,7 +12,6 @@ const createNewUser = async (app, {
     name,
     lastname,
     password,
-    role,
     userTokenVerification,
   });
 

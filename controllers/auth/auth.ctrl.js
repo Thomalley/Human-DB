@@ -41,7 +41,6 @@ const postRegister = (app) => async (req, res) => {
     name,
     lastname,
     password,
-    role,
   } = req.body;
 
   // Verify if user already exists
@@ -83,7 +82,7 @@ const postRegister = (app) => async (req, res) => {
       password: passwordHash,
       name,
       lastname,
-      role,
+
       userTokenVerification: token,
     });
   } catch (err) {
