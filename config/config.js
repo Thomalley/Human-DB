@@ -1,15 +1,13 @@
-require('dotenv').config();
-
+require('dotenv').config()
 const {
   DB_USERNAME = 'backofficeUser',
   DB_PASSWORD = 'backofficePass',
   DB_NAME = 'backofficeDB',
   DB_HOST = 'localhost',
   DB_PORT = '5432',
-  NODE_ENV = 'development',
 } = process.env;
 
-const envConfigs = {
+module.exports = {
   development: {
     username: DB_USERNAME,
     password: DB_PASSWORD,
@@ -51,5 +49,3 @@ const envConfigs = {
     },
   },
 };
-
-module.exports = () => envConfigs[NODE_ENV];

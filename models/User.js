@@ -2,14 +2,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    static associate(models) {
-      User.belongsToMany(models.Expense, {
-        through: models.ExpenseUser,
-        foreignKey: 'userId',
-      });
-    }
-  }
+  class User extends Model {}
   User.init({
     id: {
       type: DataTypes.INTEGER,
@@ -35,13 +28,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     createdAt: {
       allowNull: false,
-      type: sequelize.DATEONLY,
+      type: DataTypes.DATE,
       defaultValue: sequelize.fn('now'),
       field: "created_at",
     },
     updatedAt: {
       allowNull: false,
-      type: sequelize.DATEONLY,
+      type: DataTypes.DATE,
       defaultValue: sequelize.fn('now'),
       field: "updated_at",
     }

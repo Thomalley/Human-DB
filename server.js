@@ -9,10 +9,7 @@ const db = require('./models');
 const pkg = require('./package.json');
 
 const { NODE_ENV = 'development' } = process.env;
-const logger = require('./config/logger')(pkg.name, NODE_ENV);
-
-// dotenv
-require('dotenv').config();
+const logger = require('./config/logger')(pkg.name, process.env.NODE_ENV);
 
 const app = express();
 app.use(express.static(path.join(__dirname, 'build')));
