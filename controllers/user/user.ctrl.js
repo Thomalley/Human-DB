@@ -17,9 +17,6 @@ const {
   findUsers,
   updateUser,
   deleteUserById,
-  updateCategoryUserRoles,
-  getCategoryUserRolesByUserId,
-  deleteCategoryUserRoles,
 } = require('./user.services');
 
 const CONTROLLER = 'src/controllers/user/user.ctrl.js';
@@ -28,8 +25,6 @@ const FUNC_UPDATE_USER = 'putUpdateUser()';
 const FUNC_GET_USER = 'getCurrentUser()';
 const FUNC_GET_USER_BY_ID = 'getUserById()';
 const FUNC_DELETE_USER = 'deleteUser()';
-const FUNC_GET_USER_CATEGORY_ROLES = 'getUserSubcategoryRoles';
-const FUNC_UPDATE_USER_CATEGORY_ROLES = 'putUpdateUserSubcategoryRoles';
 
 const getUsersPerPage = (app) => async (req, res) => {
   const { logger } = app.locals;
@@ -43,20 +38,24 @@ const getUsersPerPage = (app) => async (req, res) => {
 
     if (!users.rows.length) {
       const message = 'No hay más usuarios.';
-      responseGenerator2(res, NO_CONTENT.status, SUCCESS, message,
-        {
-          users: [],
-          totalUsers: 0,
-        });
+      responseGenerator2(res, NO_CONTENT.status, SUCCESS, message, {
+        users: [],
+        totalUsers: 0,
+      });
       return;
     }
 
     const message = 'Usuarios encontrados.';
-    responseGenerator2(res, OK.status, SUCCESS, message,
+    responseGenerator2(
+      res,
+      OK.status,
+      SUCCESS,
+      message,
       {
         users: users.rows,
         totalUsers: users.count,
-      });
+      },
+    );
   } catch (err) {
     logger.error(`${CONTROLLER}::${FUNC_GET_USERS_PAGE}: ${err.message}`, {
       ...req.body,

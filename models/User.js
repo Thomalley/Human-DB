@@ -1,6 +1,7 @@
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model { }
   User.init({
@@ -34,14 +35,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.DATE,
       defaultValue: sequelize.fn('now'),
-      field: "created_at",
+      field: 'created_at',
     },
     updatedAt: {
       allowNull: false,
       type: DataTypes.DATE,
       defaultValue: sequelize.fn('now'),
-      field: "updated_at",
-    }
+      field: 'updated_at',
+    },
   }, {
     sequelize,
     modelName: 'User',

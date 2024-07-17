@@ -65,7 +65,7 @@ const postRegister = (app) => async (req, res) => {
     return;
   }
 
-  const passwordHash = await generateHash(password) ;
+  const passwordHash = await generateHash(password);
 
   const token = jwt.sign({
     exp: Date.now() + 7 * 24 * 60 * 60 * 1000,
@@ -95,7 +95,6 @@ const postRegister = (app) => async (req, res) => {
   const message = '¡Usuario creado exitosamente!';
   responseGenerator2(res, CREATED.status, SUCCESS, message, user);
 };
-
 
 const postLogin = (app) => async (req, res) => {
   const { logger } = app.locals;
@@ -144,7 +143,6 @@ const postLogin = (app) => async (req, res) => {
   // User exists and passwords match
   try {
     token = await sign(user);
-    console.log(token);
     data.accessToken = token;
     data.user = user;
     const message = 'Credenciales correctas.';
@@ -154,7 +152,6 @@ const postLogin = (app) => async (req, res) => {
     responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, message, data);
   }
 };
-
 
 module.exports = {
   postRegister,

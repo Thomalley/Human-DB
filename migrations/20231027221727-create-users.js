@@ -1,5 +1,3 @@
-const { allow } = require("joi");
-
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
@@ -7,7 +5,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       name: {
         type: Sequelize.STRING,
@@ -38,10 +36,10 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false,
         defaultValue: Sequelize.fn('now'),
-      }
+      },
     });
   },
   async down(queryInterface) {
     await queryInterface.dropTable('users');
-  }
+  },
 };
