@@ -9,7 +9,7 @@ const {
 const {
   putUserValidation,
 } = require('./user.validations');
-
+const { ADMIN } = require('../../misc/const/roles');
 const { isAuthorized } = require('../auth/auth.middlewares');
 
 module.exports = (app, router) => {
