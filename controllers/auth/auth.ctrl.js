@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const { sign } = require('../../misc/utils/jwt');
 
 const {
@@ -28,7 +27,7 @@ const {
   findUser,
 } = require('./auth.services');
 
-const CONTROLLER = 'src/controllers/auth/auth.ctrl.js';
+const CONTROLLER = 'auth.ctrl.js';
 const FUNC_POST_LOGIN = 'postLogin()';
 const FUNC_POST_REGISTER = 'postRegister()';
 
@@ -47,12 +46,12 @@ const postRegister = (app) => async (req, res) => {
   // Verify if user already exists
   let existingUser = null;
   try {
+    const message = 'User already exists';
     existingUser = await findUser(app, { email: email.toLowerCase() });
     if (existingUser) {
-      logger.warn(`${CONTROLLER}::${FUNC_POST_REGISTER}: User already exists`, {
+      logger.warn(`${CONTROLLER}::${FUNC_POST_REGISTER}: ${message}`, {
         ...req.body,
       });
-      const message = 'User already exists';
       responseGenerator2(res, CONFLICT.status, FAILURE, message);
       return;
     }
@@ -60,17 +59,11 @@ const postRegister = (app) => async (req, res) => {
     logger.error(`${CONTROLLER}::${FUNC_POST_REGISTER}: ${err.message}`, {
       ...req.body,
     });
-    const message = 'User already exists';
-    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, message);
+    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, 'Error de servidor');
     return;
   }
 
   const passwordHash = await generateHash(password);
-
-  const token = jwt.sign({
-    exp: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    email,
-  }, process.env.SECRET_TOKEN_KEY);
 
   // Create new user
   let user = null;
@@ -81,19 +74,14 @@ const postRegister = (app) => async (req, res) => {
       name,
       lastname,
       role,
-      userTokenVerification: token,
     });
+    responseGenerator2(res, CREATED.status, SUCCESS, '¡Usuario creado exitosamente!', user);
   } catch (err) {
     logger.error(`${CONTROLLER}::${FUNC_POST_REGISTER}: ${err.message}`, {
       ...req.body,
     });
-    const message = 'Hubo un error interno creando el usuario.';
-    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, message);
-    return;
+    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, 'Hubo un error interno creando el usuario.');
   }
-
-  const message = '¡Usuario creado exitosamente!';
-  responseGenerator2(res, CREATED.status, SUCCESS, message, user);
 };
 
 const postLogin = (app) => async (req, res) => {
@@ -116,15 +104,14 @@ const postLogin = (app) => async (req, res) => {
       logger.warn(`${CONTROLLER}::${FUNC_POST_LOGIN}: User does not exist`, {
         ...req.body,
       });
-      const message = 'Credenciales incorrectas.';
-      responseGenerator2(res, NOT_FOUND.status, FAILURE, message, data);
+      responseGenerator2(res, NOT_FOUND.status, FAILURE, 'Credenciales incorrectas.', data);
       return;
     }
   } catch (err) {
     logger.error(`${CONTROLLER}::${FUNC_POST_LOGIN}: ${err.message}`, {
       ...req.body,
     });
-    const message = 'Ha ocurrido un error interno al tratar de hacer ingreso.';
+    const message = 'Ha ocurrido un error interno al tratar de iniciar sesión.';
     responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, message);
     return;
   }

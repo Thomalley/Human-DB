@@ -2,16 +2,12 @@ const sequelize = require('sequelize');
 
 const op = sequelize.Op;
 
-const findUserById = async (app, {
-  id,
-}) => {
+const findUserById = async (app, { id }) => {
   const { db } = app.locals;
 
   const user = await db.User.findOne({
-    where: {
-      id,
-    },
-    attributes: ['id', 'email', 'role', 'name', 'lastname', 'active'],
+    where: { id },
+    attributes: ['id', 'email', 'role', 'name', 'lastname'],
   });
 
   return user;
@@ -24,18 +20,19 @@ const findUsers = async (app, {
 }) => {
   const { db } = app.locals;
   const whereUser = {};
-
-  if (!!searchValue && searchValue !== '') {
+  const fixedLimit = parseInt(limit, 10);
+  const fixedPage = parseInt(page, 10);
+  if (searchValue) {
     whereUser.name = {
       [op.iLike]: `%${searchValue}%`,
     };
   }
 
   const users = await db.User.findAndCountAll({
-    offset: limit * page,
-    limit: Number.parseInt(limit, 10),
+    offset: fixedLimit * fixedPage,
+    limit: fixedLimit,
     where: whereUser,
-    attributes: ['id', 'name', 'lastname', 'email', 'role', 'lastConnection'],
+    attributes: ['id', 'name', 'lastname', 'email', 'role'],
     order: [['name', 'ASC']],
   });
 
@@ -46,7 +43,6 @@ const updateUser = async (app, {
   id,
   name,
   lastname,
-  active,
   role,
 }) => {
   const { db } = app.locals;
@@ -57,7 +53,6 @@ const updateUser = async (app, {
     await user.update({
       name,
       lastname,
-      active,
       role,
     });
   }
@@ -65,13 +60,11 @@ const updateUser = async (app, {
   return user;
 };
 
-const deleteUserById = async (app, id) => {
+const deleteUserById = async (app, ids) => {
   const { db } = app.locals;
 
   await db.user.destroy({
-    where: {
-      id,
-    },
+    where: { [op.in]: ids },
   });
 
   return null;
