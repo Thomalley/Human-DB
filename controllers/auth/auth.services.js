@@ -8,7 +8,7 @@ const createNewUser = async (app, {
 }) => {
   const { db } = app.locals;
 
-  const user = await db.user.create({
+  const user = await db.User.create({
     email,
     name,
     lastname,
@@ -25,11 +25,11 @@ const findUser = async (app, {
 }) => {
   const { db } = app.locals;
 
-  const user = await db.user.findOne({
+  const user = await db.User.findOne({
     where: {
       email,
     },
-    attributes: { exclude: ['userTokenVerification', 'resetPasswordToken', 'createdAt', 'updatedAt', 'active'] },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
   });
   return user;
 };

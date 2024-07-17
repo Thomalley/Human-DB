@@ -18,7 +18,6 @@ const FUNC_POST_LOGIN_VALIDATION = 'postLoginValidation()';
 
 const postRegisterValidation = (app) => async (req, res, next) => {
   const { logger } = app.locals;
-
   try {
     await registerSchema.validateAsync(req.body);
   } catch (err) {
@@ -29,13 +28,11 @@ const postRegisterValidation = (app) => async (req, res, next) => {
     responseGenerator2(res, BAD_REQUEST.status, FAILURE, message);
     return;
   }
-
   next();
 };
 
 const postLoginValidation = (app) => async (req, res, next) => {
   const { logger } = app.locals;
-
   try {
     await loginSchema.validateAsync(req.body);
   } catch (err) {

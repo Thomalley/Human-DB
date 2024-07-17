@@ -7,7 +7,7 @@ const findUserById = async (app, {
 }) => {
   const { db } = app.locals;
 
-  const user = await db.user.findOne({
+  const user = await db.User.findOne({
     where: {
       id,
     },
@@ -31,7 +31,7 @@ const findUsers = async (app, {
     };
   }
 
-  const users = await db.user.findAndCountAll({
+  const users = await db.User.findAndCountAll({
     offset: limit * page,
     limit: Number.parseInt(limit, 10),
     where: whereUser,
@@ -51,7 +51,7 @@ const updateUser = async (app, {
 }) => {
   const { db } = app.locals;
 
-  const user = await db.user.findByPk(id);
+  const user = await db.User.findByPk(id);
 
   if (user) {
     await user.update({

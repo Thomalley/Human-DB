@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/login
+Authorization: Bearer {{$dotenv AUTHORIZATION_TOKEN}}
+x-user-token: {{$dotenv TOKEN_X_USER}}
+Content-Type: application/json
+
+{ 
+  "email": "asd@gmail.com", 
+  "password": "123"
+}

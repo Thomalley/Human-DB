@@ -1,3 +1,5 @@
+const { allow } = require("joi");
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
@@ -20,6 +22,10 @@ module.exports = {
         allowNull: false,
       },
       password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      role: {
         type: Sequelize.STRING,
         allowNull: false,
       },

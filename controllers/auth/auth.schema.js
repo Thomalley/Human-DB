@@ -6,7 +6,8 @@ const registerSchema = Joi.object({
   email: Joi.string().min(3).max(255).pattern(new RegExp(re)).required(),
   name: Joi.string().min(2).max(255).required(),
   lastname: Joi.string().min(2).max(255).required(),
-  password: Joi.string().allow(null),
+  password: Joi.string().required(),
+  role: Joi.string().required()
 });
 
 const loginSchema = Joi.object({

@@ -7,8 +7,6 @@ const db = require('./models');
 
 // Configure App
 const pkg = require('./package.json');
-
-const { NODE_ENV = 'development' } = process.env;
 const logger = require('./config/logger')(pkg.name, process.env.NODE_ENV);
 
 const app = express();

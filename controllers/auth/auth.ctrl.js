@@ -65,11 +65,8 @@ const postRegister = (app) => async (req, res) => {
     return;
   }
 
-  // Hash password
-  // En el caso que un usuario sea creado por un admin no tendrá password.
-  const passwordHash = password ? await generateHash(password) : null;
+  const passwordHash = await generateHash(password) ;
 
-  // Generate token
   const token = jwt.sign({
     exp: Date.now() + 7 * 24 * 60 * 60 * 1000,
     email,
@@ -147,6 +144,7 @@ const postLogin = (app) => async (req, res) => {
   // User exists and passwords match
   try {
     token = await sign(user);
+    console.log(token);
     data.accessToken = token;
     data.user = user;
     const message = 'Credenciales correctas.';
