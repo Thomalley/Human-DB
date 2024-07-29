@@ -1,4 +1,5 @@
-require('dotenv').config()
+require('dotenv').config();
+
 const {
   DB_USERNAME = 'backofficeUser',
   DB_PASSWORD = 'backofficePass',

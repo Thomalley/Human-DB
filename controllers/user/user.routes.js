@@ -6,11 +6,10 @@ const {
   getUserById,
 } = require('./user.ctrl');
 
-const {
-  putUserValidation,
-} = require('./user.validations');
+const { putUserValidation } = require('./user.validations');
 
 const { isAuthorized } = require('../auth/auth.middlewares');
+const { ADMIN } = require('../../misc/const/roles');
 
 module.exports = (app, router) => {
   router.get('/users', isAuthorized(app, [ADMIN]), getUsersPerPage(app));

@@ -4,7 +4,6 @@ const createNewUser = async (app, {
   lastname,
   password,
   role,
-  userTokenVerification,
 }) => {
   const { db } = app.locals;
 
@@ -14,7 +13,6 @@ const createNewUser = async (app, {
     lastname,
     password,
     role,
-    userTokenVerification,
   });
 
   return user;

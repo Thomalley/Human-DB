@@ -1,3 +1,3 @@
-const ADMIN = "admin";
+const ADMIN = 'admin';
 
 module.exports = { ADMIN };

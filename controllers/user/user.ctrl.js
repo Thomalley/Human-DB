@@ -17,64 +17,49 @@ const {
   findUsers,
   updateUser,
   deleteUserById,
-  updateCategoryUserRoles,
-  getCategoryUserRolesByUserId,
-  deleteCategoryUserRoles,
 } = require('./user.services');
 
-const CONTROLLER = 'src/controllers/user/user.ctrl.js';
+const CONTROLLER = 'user.ctrl.js';
 const FUNC_GET_USERS_PAGE = 'getUsersPerPage()';
 const FUNC_UPDATE_USER = 'putUpdateUser()';
 const FUNC_GET_USER = 'getCurrentUser()';
 const FUNC_GET_USER_BY_ID = 'getUserById()';
 const FUNC_DELETE_USER = 'deleteUser()';
-const FUNC_GET_USER_CATEGORY_ROLES = 'getUserSubcategoryRoles';
-const FUNC_UPDATE_USER_CATEGORY_ROLES = 'putUpdateUserSubcategoryRoles';
 
 const getUsersPerPage = (app) => async (req, res) => {
   const { logger } = app.locals;
-
-  const {
-    limit, page, searchValue,
-  } = req.query;
+  const { limit, page, searchValue } = req.query;
 
   try {
     const users = await findUsers(app, { limit, page, searchValue });
-
     if (!users.rows.length) {
-      const message = 'No hay más usuarios.';
-      responseGenerator2(res, NO_CONTENT.status, SUCCESS, message,
-        {
-          users: [],
-          totalUsers: 0,
-        });
+      responseGenerator2(res, NO_CONTENT.status, SUCCESS, 'No hay más usuarios.', {
+        users: [],
+        totalUsers: 0,
+      });
       return;
     }
 
-    const message = 'Usuarios encontrados.';
-    responseGenerator2(res, OK.status, SUCCESS, message,
+    responseGenerator2(
+      res,
+      OK.status,
+      SUCCESS,
+      'Usuarios encontrados.',
       {
         users: users.rows,
         totalUsers: users.count,
-      });
+      },
+    );
   } catch (err) {
-    logger.error(`${CONTROLLER}::${FUNC_GET_USERS_PAGE}: ${err.message}`, {
-      ...req.body,
-    });
-    const message = 'Ha ocurrido un error interno al buscar usuarios.';
-    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, message);
+    logger.error(`${CONTROLLER}::${FUNC_GET_USERS_PAGE}: ${err.message}`, { ...req.body });
+    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, 'Ha ocurrido un error interno al buscar usuarios.');
   }
 };
 
 const putUpdateUser = (app) => async (req, res) => {
   const { logger } = app.locals;
   const { id } = req.params;
-  const {
-    name,
-    lastname,
-    active,
-    role,
-  } = req.body;
+  const { name, lastname, role } = req.body;
 
   try {
     // Verify required parameters
@@ -82,8 +67,7 @@ const putUpdateUser = (app) => async (req, res) => {
       logger.warn(`${CONTROLLER}::${FUNC_UPDATE_USER}: Missing parameters.`, {
         ...req.body,
       });
-      const message = 'El id del usuario es requerido.';
-      responseGenerator2(res, BAD_REQUEST.status, FAILURE, message);
+      responseGenerator2(res, BAD_REQUEST.status, FAILURE, 'El id del usuario es requerido.');
       return;
     }
 
@@ -91,7 +75,6 @@ const putUpdateUser = (app) => async (req, res) => {
       id,
       name,
       lastname,
-      active,
       role,
     });
 
@@ -99,24 +82,20 @@ const putUpdateUser = (app) => async (req, res) => {
       logger.warn(`${CONTROLLER}::${FUNC_UPDATE_USER}: User not edited.`, {
         ...req.body,
       });
-      const message = 'No se ha podido editar al usuario.';
-      responseGenerator2(res, BAD_REQUEST.status, FAILURE, message);
+      responseGenerator2(res, BAD_REQUEST.status, FAILURE, 'No se ha podido editar al usuario.');
       return;
     }
-    const message = 'Usuario editado correctamente.';
-    responseGenerator2(res, OK.status, SUCCESS, message, editedUser);
+    responseGenerator2(res, OK.status, SUCCESS, 'Usuario editado correctamente.', editedUser);
   } catch (err) {
     logger.error(`${CONTROLLER}::${FUNC_UPDATE_USER}: ${err.message}`, {
       ...req.body,
     });
-    const message = 'Ha ocurrido un error interno al editar al usuario.';
-    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, message);
+    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, 'Ha ocurrido un error interno al editar al usuario.');
   }
 };
 
 const getCurrentUser = (app) => async (req, res) => {
   const { logger } = app.locals;
-
   // Get data
   const { userId } = res.locals;
 
@@ -128,26 +107,20 @@ const getCurrentUser = (app) => async (req, res) => {
       logger.warn(`${CONTROLLER}::${FUNC_GET_USER}: User does not exist`, {
         ...req.body,
       });
-      const message = 'Usuario no existe o ha sido eliminado.';
-      responseGenerator2(res, NOT_FOUND.status, FAILURE, message);
+      responseGenerator2(res, NOT_FOUND.status, FAILURE, 'Usuario no existe o ha sido eliminado.');
       return;
     }
+    responseGenerator2(res, OK.status, SUCCESS, 'Usuario obtenido satisfactoriamente.', user);
   } catch (err) {
     logger.error(`${CONTROLLER}::${FUNC_GET_USER}: ${err.message}`, {
       ...req.body,
     });
-    const message = 'Ha ocurrido un error interno al buscar al usuario actual.';
-    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, message);
-    return;
+    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, 'Ha ocurrido un error interno al buscar al usuario actual.');
   }
-
-  const message = 'Usuario obtenido satisfactoriamente.';
-  responseGenerator2(res, OK.status, SUCCESS, message, user);
 };
 
 const getUserById = (app) => async (req, res) => {
   const { logger } = app.locals;
-
   // Get data
   const { id } = req.params;
 
@@ -159,18 +132,15 @@ const getUserById = (app) => async (req, res) => {
       logger.warn(`${CONTROLLER}::${FUNC_GET_USER_BY_ID}: User does not exist`, {
         ...req.body,
       });
-      const message = 'Usuario no existe o fue eliminado.';
-      responseGenerator2(res, NOT_FOUND.status, FAILURE, message);
+      responseGenerator2(res, NOT_FOUND.status, FAILURE, 'Usuario no existe o fue eliminado.');
       return;
     }
-    const message = 'Usuario encontrado exitosamente.';
-    responseGenerator2(res, OK.status, SUCCESS, message, user);
+    responseGenerator2(res, OK.status, SUCCESS, 'Usuario encontrado exitosamente.', user);
   } catch (err) {
     logger.error(`${CONTROLLER}::${FUNC_GET_USER_BY_ID}: ${err.message}`, {
       ...req.body,
     });
-    const message = 'Ha ocurrido un error interno al buscar al usuario.';
-    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, message);
+    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, 'Ha ocurrido un error interno al buscar al usuario.');
   }
 };
 
@@ -180,18 +150,14 @@ const deleteUser = (app) => async (req, res) => {
 
   try {
     const userIdsArray = userIds.split(',');
-    for (let i = 0; i < userIdsArray.length; i += 1) {
-      await deleteUserById(app, userIdsArray[i]);
-    }
+    await deleteUserById(app, userIdsArray);
 
-    const message = 'Usuarios eliminados satisfactoriamente.';
-    responseGenerator2(res, OK.status, SUCCESS, message);
+    responseGenerator2(res, OK.status, SUCCESS, 'Usuarios eliminados satisfactoriamente.');
   } catch (err) {
     logger.error(`${CONTROLLER}::${FUNC_DELETE_USER}: ${err.message}`, {
       ...req.body,
     });
-    const message = 'Ha ocurrido un error interno al eliminar el usuario.';
-    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, message);
+    responseGenerator2(res, INTERNAL_SERVER_ERROR.status, FAILURE, 'Ha ocurrido un error interno al eliminar el usuario.');
   }
 };
 
